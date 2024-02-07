@@ -16,7 +16,7 @@
         </p>
         <img
           class="w-[50px] h-[50px] object-cover"
-          :src="`https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`"
+          :src="`${WEATHER_ICON_URL}/${day.weather[0].icon}@2x.png`"
           alt=""
         />
         <div class="flex gap-2 flex-1 justify-end">
@@ -29,6 +29,8 @@
 </template>
 
 <script setup>
+import { WEATHER_ICON_URL } from '@/services/config';
+
 defineProps({
   weatherData: {
     type: Object,

@@ -10,7 +10,7 @@
       <p class="flex items-center text-3xl">
         <img
           class="w-[50px] h-[50px] object-cover"
-          :src="`https://openweathermap.org/img/wn/${city.weather.weather[0].icon}@2x.png`"
+          :src="`${WEATHER_ICON_URL}/${city.weather.weather[0].icon}@2x.png`"
           alt=""
         />
         <span>{{ Math.round(city.weather.main.temp) }}&deg;</span>
@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+import { WEATHER_ICON_URL } from '@/services/config';
+
 defineProps({
   city: {
     type: Object,

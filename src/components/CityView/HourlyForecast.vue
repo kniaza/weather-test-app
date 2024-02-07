@@ -17,7 +17,7 @@
           </p>
           <img
             class="w-auto h-[50px] object-cover"
-            :src="`https://openweathermap.org/img/wn/${hourData.weather[0].icon}@2x.png`"
+            :src="`${WEATHER_ICON_URL}/${hourData.weather[0].icon}@2x.png`"
             alt=""
           />
           <p class="text-xl">{{ Math.round(hourData.temp) }}&deg;</p>
@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+import { WEATHER_ICON_URL } from '@/services/config';
+
 defineProps({
   weatherData: {
     type: Object,

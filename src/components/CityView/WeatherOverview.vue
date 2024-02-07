@@ -12,7 +12,7 @@
     </p>
     <img
       class="w-[150px] h-auto"
-      :src="`https://openweathermap.org/img/wn/${weatherData.current.weather[0].icon}@2x.png`"
+      :src="`${WEATHER_ICON_URL}/${weatherData.current.weather[0].icon}@2x.png`"
       :alt="weatherData.current?.weather[0].description"
     />
   </div>
@@ -20,6 +20,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { WEATHER_ICON_URL } from '@/services/config';
 
 const props = defineProps({
   cityName: {
