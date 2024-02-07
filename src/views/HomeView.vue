@@ -43,39 +43,34 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import CityList from '@/components/CityList.vue';
+import { mapService } from '@/services/map';
+import * as helpers from '@/helpers';
 
 const router = useRouter();
-const mapboxAPYKey = import.meta.env.VITE_MAPBOX_API_KEY;
 const searchQuery = ref('');
-const queryTimeout = ref(null);
 const mapboxSearchResults = ref(null);
 const searchError = ref(null);
 
-const getSearchResults = () => {
+const getSearchResults = helpers.debounce(async () => {
   const { value: searchValue } = searchQuery;
-  clearTimeout(queryTimeout.value);
 
-  queryTimeout.value = setTimeout(async () => {
-    if (searchValue.trim().length) {
-      try {
-        const { data } = await axios.get(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchValue}.json?access_token=${mapboxAPYKey}&type=place`
-        );
+  if (searchValue.trim().length) {
+    try {
+      const data = await mapService.searchPlace(searchValue);
 
-        mapboxSearchResults.value = data.features;
-      } catch (e) {
-        console.error(e);
-        searchError.value = true;
-      }
-      return;
+      mapboxSearchResults.value = data.features;
+    } catch (e) {
+      console.error(e);
+      searchError.value = true;
     }
 
-    mapboxSearchResults.value = null;
-  }, 300);
-};
+    return;
+  }
+
+  mapboxSearchResults.value = null;
+}, 350);
 
 const previewCity = (searchResult) => {
   const [city, state] = searchResult.place_name.split(',');

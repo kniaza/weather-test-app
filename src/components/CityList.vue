@@ -11,32 +11,32 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-import CityCard from './CityCard.vue';
+import CityCard from '@/components/CityList/CityCard.vue';
+import { citiesStorage } from '@/services/storage';
+import { weatherService } from '@/services/weather';
 
-const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const router = useRouter();
 const savedCities = ref([]);
 
 const getCities = async () => {
-  const citiesLocalStorageKey = 'savedCities';
-  const cities = localStorage.getItem(citiesLocalStorageKey);
+  const cities = citiesStorage.data;
   if (cities) {
-    savedCities.value = JSON.parse(cities);
+    savedCities.value = cities;
 
     const requests = [];
     savedCities.value.forEach((city) => {
       requests.push(
-        axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${apiKey}&units=metric`
-        )
+        weatherService.currentWeather({
+          lat: city.coords.lat,
+          lng: city.coords.lng,
+        })
       );
     });
 
     const weatherData = await Promise.all(requests);
 
     weatherData.forEach((value, index) => {
-      savedCities.value[index].weather = value.data;
+      savedCities.value[index].weather = value;
     });
   }
 };
