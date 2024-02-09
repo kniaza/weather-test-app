@@ -8,22 +8,23 @@
   </p>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CityCard from '@/components/CityList/CityCard.vue';
 import { citiesStorage } from '@/services/storage';
 import { weatherService } from '@/services/weather';
+import { CityStorageItem } from '@/types/storage.type';
 
 const router = useRouter();
-const savedCities = ref([]);
+const savedCities = ref<CityStorageItem[]>([]);
 
 const getCities = async () => {
-  const cities = citiesStorage.data;
+  const cities = citiesStorage.state;
   if (cities) {
     savedCities.value = cities;
 
-    const requests = [];
+    const requests: ReturnType<typeof weatherService.currentWeather>[] = [];
     savedCities.value.forEach((city) => {
       requests.push(
         weatherService.currentWeather({
@@ -41,7 +42,7 @@ const getCities = async () => {
   }
 };
 
-const goToCityView = (city) => {
+const goToCityView = (city: CityStorageItem) => {
   router.push({
     name: 'cityView',
     params: {

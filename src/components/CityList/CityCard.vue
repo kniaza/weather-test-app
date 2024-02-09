@@ -10,30 +10,28 @@
       <p class="flex items-center text-3xl">
         <img
           class="w-[50px] h-[50px] object-cover"
-          :src="`${WEATHER_ICON_URL}/${city.weather.weather[0].icon}@2x.png`"
+          :src="`${WEATHER_ICON_URL}/${city.weather?.weather[0].icon}@2x.png`"
           alt=""
         />
-        <span>{{ Math.round(city.weather.main.temp) }}&deg;</span>
+        <span>{{ Math.round(city.weather?.main.temp || 0) }}&deg;</span>
       </p>
       <div class="flex gap-2 text-right self-end">
         <span class="text-xs">
-          H: {{ Math.round(city.weather.main.temp_max) }}&deg;
+          H: {{ Math.round(city.weather?.main.temp_max || 0) }}&deg;
         </span>
         <span class="text-xs">
-          L: {{ Math.round(city.weather.main.temp_min) }}&deg;
+          L: {{ Math.round(city.weather?.main.temp_min || 0) }}&deg;
         </span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { WEATHER_ICON_URL } from '@/services/config';
+import { CityStorageItem } from '@/types/storage.type';
 
-defineProps({
-  city: {
-    type: Object,
-    default: {},
-  },
-});
+defineProps<{
+  city: CityStorageItem;
+}>();
 </script>

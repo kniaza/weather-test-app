@@ -41,17 +41,18 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CityList from '@/components/CityList.vue';
 import { mapService } from '@/services/map';
 import * as helpers from '@/helpers';
+import { FeaturesMapBox } from '@/types/map.type';
 
 const router = useRouter();
 const searchQuery = ref('');
-const mapboxSearchResults = ref(null);
-const searchError = ref(null);
+const mapboxSearchResults = ref<FeaturesMapBox[] | null>(null);
+const searchError = ref<boolean | null>(null);
 
 const getSearchResults = helpers.debounce(async () => {
   const { value: searchValue } = searchQuery;
@@ -72,7 +73,7 @@ const getSearchResults = helpers.debounce(async () => {
   mapboxSearchResults.value = null;
 }, 350);
 
-const previewCity = (searchResult) => {
+const previewCity = (searchResult: FeaturesMapBox) => {
   const [city, state] = searchResult.place_name.split(',');
   const [lng, lat] = searchResult.geometry.coordinates;
   router.push({
@@ -84,7 +85,7 @@ const previewCity = (searchResult) => {
     query: {
       lat,
       lng,
-      preview: true,
+      preview: 'true',
     },
   });
 };

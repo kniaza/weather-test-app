@@ -1,13 +1,18 @@
 import axios from 'axios';
 import { OPENWEATHER_API_KEY } from './config';
+import { WeatherCurrentResponse, WeatherResponse } from '@/types/weather.type';
+
+export type getWeatherInfoProp = Record<'lat' | 'lng', number | string>;
 
 export default class WeatherService {
+  url: string;
+
   constructor() {
     this.url = 'https://api.openweathermap.org/data';
   }
 
-  async getWeatherInfo({ lat, lng }) {
-    const weatherData = await axios.get(
+  async getWeatherInfo({ lat, lng }: getWeatherInfoProp) {
+    const weatherData = await axios.get<WeatherResponse>(
       `${this.url}/3.0/onecall?lat=${lat}&lon=${lng}&appid=${OPENWEATHER_API_KEY}&units=metric`
     );
 
@@ -26,8 +31,8 @@ export default class WeatherService {
     return weatherData.data;
   }
 
-  async currentWeather({ lat, lng }) {
-    const { data } = await axios.get(
+  async currentWeather({ lat, lng }: getWeatherInfoProp) {
+    const { data } = await axios.get<WeatherCurrentResponse>(
       `${this.url}/2.5/weather?lat=${lat}&lon=${lng}&appid=${OPENWEATHER_API_KEY}&units=metric`
     );
 

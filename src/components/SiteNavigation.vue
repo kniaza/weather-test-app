@@ -28,16 +28,17 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { citiesStorage } from '@/services/storage';
 import BaseModal from './UI/BaseModal.vue';
 import InfoModalContent from './InfoModalContent.vue';
+import { CityStorageItem } from '@/types/storage.type';
 
 const route = useRoute();
 const router = useRouter();
-const savedCities = ref([]);
+const savedCities = ref<CityStorageItem[]>([]);
 const modelActive = ref(false);
 
 const toggleModal = () => {
@@ -45,25 +46,25 @@ const toggleModal = () => {
 };
 
 const addCity = () => {
-  const cities = citiesStorage.data;
+  const cities = citiesStorage.state;
   const { lat, lng } = route.query;
   const { state, city } = route.params;
   if (cities) {
-    savedCities.value = citiesStorage.data;
+    savedCities.value = citiesStorage.state;
   }
 
-  const locationsObj = {
+  const locationsObj: CityStorageItem = {
     id: window.crypto.randomUUID(),
-    state,
-    city,
+    state: state as string,
+    city: city as string,
     coords: {
-      lat,
-      lng,
+      lat: lat as string,
+      lng: lng as string,
     },
   };
 
   savedCities.value.push(locationsObj);
-  citiesStorage.data = savedCities.value;
+  citiesStorage.state = savedCities.value;
 
   const { preview, ...query } = route.query;
   router.replace({ query });

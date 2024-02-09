@@ -28,13 +28,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { WEATHER_ICON_URL } from '@/services/config';
+import { WeatherResponse } from '@/types/weather.type';
 
-defineProps({
-  weatherData: {
-    type: Object,
-    default: {},
-  },
-});
+defineProps<{
+  weatherData: WeatherResponse;
+}>();
 </script>
